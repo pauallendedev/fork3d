@@ -50,3 +50,28 @@ test('unknown endpoint or malformed body is ignored', () => {
   expect(normalize('/nope', {}, NOW)).toBeNull()
   expect(normalize('/tool-use', { tool_input: {} }, NOW)).toBeNull()
 })
+
+test('SubagentStop without agent_id is ignored', () => {
+  expect(normalize('/agent/stop', { cwd: '/proj' }, NOW)).toBeNull()
+})
+
+test('null or non-object body never throws, returns null', () => {
+  expect(normalize('/agent/start', null, NOW)).toBeNull()
+  expect(normalize('/agent/start', undefined, NOW)).toBeNull()
+  expect(normalize('/tool-use', 'not-an-object', NOW)).toBeNull()
+})
+
+test('malformed todo entries do not throw and are sanitized', () => {
+  const ev = normalize('/tool-use', {
+    cwd: '/p', session_id: 's',
+    tool_input: { todos: [null, 42, { content: 'A', status: 'BOGUS', activeForm: 'Doing A' }] },
+  }, NOW)
+  expect(ev).not.toBeNull()
+  // 3 entries map to 3 items; bad ones sanitized to empty strings + 'pending'
+  expect(ev).toMatchObject({ kind: 'todos:update' })
+  if (ev && ev.kind === 'todos:update') {
+    expect(ev.items).toHaveLength(3)
+    expect(ev.items[0]).toEqual({ content: '', status: 'pending', activeForm: '' })
+    expect(ev.items[2].status).toBe('pending') // 'BOGUS' coerced
+  }
+})
