@@ -53,3 +53,22 @@ export interface GateAction {
   subtitle: string
   icon: string
 }
+
+export interface TodoItem {
+  content: string
+  status: 'pending' | 'in_progress' | 'completed'
+  activeForm: string
+}
+
+export interface LiveAgent {
+  id: string
+  role: string
+  color: AgentColor
+  status: AgentStatus
+  pose: AgentPose
+  station: AgentLocation
+  task: string | null
+  activity: string | null
+  startedAt: number
+  endedAt?: number
+}
