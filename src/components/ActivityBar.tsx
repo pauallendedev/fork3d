@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+import { useStore } from '../state/store'
+import type { ActiveView } from '../state/types'
 import './ActivityBar.css'
 
 const ICON = {
@@ -75,32 +77,38 @@ function RobotFace() {
 
 interface AbItem {
   label: string
-  active?: boolean
+  view: ActiveView
   icon: ReactNode
 }
 
 const ITEMS: AbItem[] = [
-  { label: 'Explorer', active: true, icon: <FilesIcon /> },
-  { label: 'Search', icon: <SearchIcon /> },
-  { label: 'Source Control', icon: <BranchIcon /> },
-  { label: 'Spatial CAD', icon: <CubeIcon /> },
-  { label: 'Extensions', icon: <SquaresIcon /> },
+  { label: 'Explorer', view: 'explorer', icon: <FilesIcon /> },
+  { label: 'Search', view: 'search', icon: <SearchIcon /> },
+  { label: 'Source Control', view: 'scm', icon: <BranchIcon /> },
+  { label: 'Spatial CAD', view: 'spatial', icon: <CubeIcon /> },
+  { label: 'Extensions', view: 'extensions', icon: <SquaresIcon /> },
 ]
 
 export function ActivityBar() {
+  const activeView = useStore((s) => s.activeView)
+  const setActiveView = useStore((s) => s.setActiveView)
   return (
     <nav className="ab-root" aria-label="Activity Bar">
-      {ITEMS.map((item) => (
-        <button
-          key={item.label}
-          type="button"
-          className={item.active ? 'ab-item ab-item--active' : 'ab-item'}
-          aria-pressed={item.active ?? false}
-        >
-          <span className="ab-tile">{item.icon}</span>
-          <span className="ab-label">{item.label}</span>
-        </button>
-      ))}
+      {ITEMS.map((item) => {
+        const active = activeView === item.view
+        return (
+          <button
+            key={item.label}
+            type="button"
+            className={active ? 'ab-item ab-item--active' : 'ab-item'}
+            aria-pressed={active}
+            onClick={() => setActiveView(item.view)}
+          >
+            <span className="ab-tile">{item.icon}</span>
+            <span className="ab-label">{item.label}</span>
+          </button>
+        )
+      })}
       <div className="ab-bottom">
         <div className="ab-avatar" aria-hidden="true">
           <RobotFace />
