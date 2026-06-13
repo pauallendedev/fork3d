@@ -83,15 +83,17 @@ export const useStore = create<ForkcodeStore>((set, get) => ({
         if (a) logs = [...s.logs.slice(-200), makeLog(a.color, 'INFO', ev.summary)]
       }
       const selected = s.selected && slice.agents[s.selected] ? s.selected : (slice.order[0] ?? null)
-      return { ...slice, logs, selected, radialFor: selected }
+      const radialFor = s.radialFor && slice.agents[s.radialFor] ? s.radialFor : null
+      return { ...slice, logs, selected, radialFor }
     }),
 
   reap: () =>
     set((s) => {
       const slice = reapEnded({ agents: s.agents, order: s.order, todos: s.todos }, Date.now(), REAP_GRACE_MS)
       const selected = s.selected && slice.agents[s.selected] ? s.selected : (slice.order[0] ?? null)
-      if (slice.agents === s.agents && selected === s.selected) return s
-      return { ...slice, selected, radialFor: selected }
+      const radialFor = s.radialFor && slice.agents[s.radialFor] ? s.radialFor : null
+      if (slice.agents === s.agents && selected === s.selected && radialFor === s.radialFor) return s
+      return { ...slice, selected, radialFor }
     }),
 
   setConnected: (c) => set({ connected: c }),
