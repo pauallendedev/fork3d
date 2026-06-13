@@ -1,0 +1,105 @@
+.ab-root {
+  width: 64px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0 12px;
+  background: var(--bg-panel);
+  user-select: none;
+}
+
+.ab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ab-tile {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: var(--text-2);
+  transition: background-color 0.14s ease, color 0.14s ease, transform 0.14s ease;
+}
+
+.ab-item:hover .ab-tile {
+  background: var(--bg-hover);
+  color: var(--text-1);
+}
+
+.ab-item:active .ab-tile {
+  transform: scale(0.94);
+}
+
+.ab-item:focus-visible .ab-tile {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.ab-label {
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--text-3);
+  transition: color 0.14s ease;
+}
+
+.ab-item:hover .ab-label {
+  color: var(--text-2);
+}
+
+.ab-item--active .ab-tile,
+.ab-item--active:hover .ab-tile {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.ab-item--active:hover .ab-tile {
+  filter: brightness(1.07);
+}
+
+.ab-item--active .ab-label,
+.ab-item--active:hover .ab-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.ab-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.ab-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--ink-deep);
+  display: grid;
+  place-items: center;
+  transition: transform 0.14s ease;
+}
+
+.ab-bottom:hover .ab-avatar {
+  transform: translateY(-1px);
+}
+
+.ab-online {
+  font-size: 8.5px;
+  font-weight: 600;
+  color: var(--green);
+}

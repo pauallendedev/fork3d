@@ -1,0 +1,56 @@
+.rm-root {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rm-pop 160ms ease-out;
+}
+
+@keyframes rm-pop {
+  from {
+    opacity: 0;
+    scale: 0.85;
+  }
+}
+
+.rm-wedge {
+  fill: #ffffff;
+  stroke: var(--border);
+  cursor: pointer;
+  transition: fill 0.12s ease;
+}
+
+.rm-seg {
+  color: var(--ink);
+}
+
+.rm-seg:hover .rm-wedge {
+  fill: #f1f5ff;
+}
+
+.rm-seg:hover {
+  color: var(--accent);
+}
+
+.rm-active .rm-wedge,
+.rm-active:hover .rm-wedge {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+.rm-active,
+.rm-active:hover {
+  color: #ffffff;
+}
+
+.rm-icon {
+  pointer-events: none;
+}
+
+.rm-center-circle {
+  fill: #ffffff;
+  stroke: var(--border);
+  cursor: pointer;
+}
+
+.rm-center {
+  color: var(--ink);
+}

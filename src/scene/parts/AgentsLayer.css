@@ -1,0 +1,117 @@
+/* agent-bots (§10) — prefix ag- */
+
+.ag-bot {
+  cursor: pointer;
+}
+
+/* hover: the bot lifts slightly while shadow + ring stay grounded */
+.ag-lift {
+  transform-box: fill-box;
+  transition: transform 0.18s ease;
+}
+
+.ag-bot:hover .ag-lift {
+  transform: translateY(-3px);
+}
+
+/* idle bob — on an INNER group so it composes with the positioning transform */
+.ag-bob {
+  transform-box: fill-box;
+  animation: ag-bob 2.6s ease-in-out infinite;
+  animation-delay: calc(var(--ag-i, 0) * -0.45s);
+}
+
+@keyframes ag-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2.5px);
+  }
+}
+
+/* eye blink: scaleY 1 → 0.1 → 1 over ~120ms, every ~4s, staggered per agent */
+.ag-eye {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: ag-blink 4.2s linear infinite;
+  animation-delay: calc(var(--ag-i, 0) * 0.65s);
+}
+
+@keyframes ag-blink {
+  0%,
+  95.2% {
+    transform: scaleY(1);
+  }
+  96.6% {
+    transform: scaleY(0.1);
+  }
+  98%,
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+/* walk pose sway */
+.ag-sway {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ag-sway 0.85s ease-in-out infinite;
+}
+
+@keyframes ag-sway {
+  0%,
+  100% {
+    transform: rotate(-2.2deg);
+  }
+  50% {
+    transform: rotate(2.2deg);
+  }
+}
+
+/* floating status dot above the antenna */
+.ag-status {
+  transform-box: fill-box;
+  animation: ag-status-float 2.2s ease-in-out infinite;
+  animation-delay: calc(var(--ag-i, 0) * -0.3s);
+}
+
+@keyframes ag-status-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* dashed selection ring: fades in, then the dashes march slowly */
+.ag-ring {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation:
+    ag-ring-spin 7s linear infinite,
+    ag-ring-in 0.2s ease-out;
+}
+
+@keyframes ag-ring-spin {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+
+@keyframes ag-ring-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

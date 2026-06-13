@@ -1,0 +1,176 @@
+.sg-root {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.sg-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  flex: none;
+}
+
+.sg-shield {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--green-soft);
+  color: var(--green);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.sg-shield svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sg-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.sg-granted {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.sg-more {
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  color: var(--text-3);
+  display: grid;
+  place-items: center;
+}
+
+.sg-more:hover {
+  background: var(--bg-hover);
+  color: var(--text-1);
+}
+
+.sg-more svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sg-source {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  flex: none;
+}
+
+.sg-source-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--bg-subtle);
+  color: var(--text-2);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.sg-source-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.sg-source-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+
+.sg-source-env {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sg-list {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sg-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  text-align: left;
+  transition: background 0.1s ease;
+}
+
+.sg-row:hover {
+  background: var(--accent-soft);
+}
+
+.sg-tile {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--bg-subtle);
+  color: var(--text-2);
+  display: grid;
+  place-items: center;
+  flex: none;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+
+.sg-row:hover .sg-tile {
+  background: #ffffff;
+  color: var(--accent);
+}
+
+.sg-tile svg {
+  width: 14px;
+  height: 14px;
+}
+
+.sg-rowtext {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sg-rowtitle {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sg-row:hover .sg-rowtitle {
+  color: var(--accent);
+}
+
+.sg-rowsub {
+  font-size: 10.5px;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.sg-chev {
+  margin-left: auto;
+  color: var(--text-3);
+  display: grid;
+  place-items: center;
+}
+
+.sg-chev svg {
+  width: 14px;
+  height: 14px;
+}

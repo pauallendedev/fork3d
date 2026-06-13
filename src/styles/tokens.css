@@ -1,0 +1,57 @@
+:root {
+  /* surfaces */
+  --bg-canvas: #e9ecf1;
+  --bg-panel: #ffffff;
+  --bg-subtle: #f6f7f9;
+  --bg-hover: #f1f3f6;
+  --bg-active: #e8f1fe;
+
+  /* borders */
+  --border: #e4e7ec;
+  --border-strong: #d5dae2;
+
+  /* text */
+  --text-1: #1c2430;
+  --text-2: #5b6472;
+  --text-3: #98a1ae;
+
+  /* accents */
+  --accent: #2f7df6;
+  --accent-soft: #eaf2ff;
+  --green: #23a55a;
+  --green-soft: #e7f6ee;
+  --orange: #f59e0b;
+  --red: #e5484d;
+  --purple: #8b5cf6;
+  --yellow: #f5c842;
+
+  /* agent colors */
+  --agent-blue: #3f8cfa;
+  --agent-green: #34b873;
+  --agent-orange: #f59a3e;
+  --agent-purple: #8b5cf6;
+  --agent-red: #e5484d;
+  --agent-yellow: #f3c83f;
+
+  /* iso scene surfaces */
+  --iso-top: #f7f9fb;
+  --iso-left: #e6eaf0;
+  --iso-right: #dbe1e9;
+  --iso-floor: #eef1f5;
+  --iso-floor-grid: #e3e8ef;
+  --iso-floor-edge: #dee3ea;
+  --wall-left: #e9edf2;
+  --wall-right: #e2e7ee;
+  --ink: #39414e;
+  --ink-deep: #1f2430;
+
+  /* shape */
+  --radius-card: 14px;
+  --radius-sm: 8px;
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.07);
+  --shadow-float: 0 12px 32px rgba(16, 24, 40, 0.14);
+
+  /* type */
+  --font-ui: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}

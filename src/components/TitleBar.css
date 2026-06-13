@@ -1,0 +1,114 @@
+.tb-root {
+  display: flex;
+  align-items: center;
+  flex: none;
+  height: 48px;
+  padding: 0 14px;
+  gap: 14px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-ui);
+  user-select: none;
+}
+
+/* macOS traffic lights */
+.tb-lights {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tb-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transition: filter 120ms ease;
+}
+
+.tb-light--close {
+  background: #ff5f57;
+}
+
+.tb-light--min {
+  background: #febc2e;
+}
+
+.tb-light--max {
+  background: #28c840;
+}
+
+.tb-lights:hover .tb-light {
+  filter: brightness(0.92);
+}
+
+/* brand */
+.tb-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tb-logo {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.tb-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: 0.01em;
+}
+
+.tb-divider {
+  width: 1px;
+  height: 16px;
+  flex: none;
+  background: var(--border-strong);
+}
+
+.tb-sub {
+  font-size: 11px;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* right-side ghost icon buttons */
+.tb-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.tb-btn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.tb-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-1);
+}
+
+.tb-btn:active {
+  background: var(--bg-active);
+}
