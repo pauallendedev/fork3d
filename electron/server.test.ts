@@ -25,10 +25,20 @@ test('parses a POST body and reports endpoint + JSON', async () => {
   expect(received).toEqual([{ endpoint: '/agent/start', body: { agent_id: 'a1' } }])
 })
 
-test('malformed JSON does not throw', async () => {
-  server = startServer({ port: 0, onBody: () => { throw new Error('should not be called') } })
+test('malformed JSON does not call onBody and responds 204', async () => {
+  let called = false
+  server = startServer({ port: 0, onBody: () => { called = true } })
   await new Promise((r) => server!.on('listening', r))
   const port = addrPort(server)
   const res = await fetch(`http://127.0.0.1:${port}/x`, { method: 'POST', body: '{not json' })
+  expect(res.status).toBe(204)
+  expect(called).toBe(false)
+})
+
+test('onBody throwing is isolated and still responds 204', async () => {
+  server = startServer({ port: 0, onBody: () => { throw new Error('boom') } })
+  await new Promise((r) => server!.on('listening', r))
+  const port = addrPort(server)
+  const res = await fetch(`http://127.0.0.1:${port}/agent/start`, { method: 'POST', body: JSON.stringify({ agent_id: 'a1' }) })
   expect(res.status).toBe(204)
 })
