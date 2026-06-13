@@ -243,3 +243,30 @@
   outline: 2px solid var(--accent);
   outline-offset: -2px;
 }
+
+.ex-empty {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+.ex-empty-msg {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+.ex-open-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+.ex-open-btn:hover {
+  filter: brightness(1.06);
+}

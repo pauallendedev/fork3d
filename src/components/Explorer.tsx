@@ -190,8 +190,40 @@ function NodeRow({ node, depth }: { node: FileNode; depth: number }) {
   return node.type === 'folder' ? <FolderRow node={node} depth={depth} /> : <FileRow node={node} depth={depth} />
 }
 
-export function Explorer({ rootName, nodes }: { rootName: string; nodes: FileNode[] }) {
+export function Explorer({
+  rootName,
+  nodes,
+  isReal = true,
+  onOpenFolder,
+}: {
+  rootName: string
+  nodes: FileNode[]
+  isReal?: boolean
+  onOpenFolder?: () => void
+}) {
   const [rootOpen, setRootOpen] = useState(true)
+
+  if (!isReal) {
+    return (
+      <div className="ex-root">
+        <div className="ex-header">
+          <span className="ex-title">EXPLORER</span>
+          <button type="button" className="ex-more" aria-label="More actions">
+            <MoreIcon />
+          </button>
+        </div>
+        <div className="ex-empty">
+          <p className="ex-empty-msg">You have not opened a folder.</p>
+          {onOpenFolder && (
+            <button type="button" className="ex-open-btn" onClick={onOpenFolder}>
+              Open Folder
+            </button>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="ex-root">
       <div className="ex-header">
