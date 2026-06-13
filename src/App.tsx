@@ -33,8 +33,12 @@ export default function App() {
 
   async function connectProject() {
     if (!rootPath) return
-    await window.forkcode?.connectProject(rootPath)
-    setConnected(true)
+    try {
+      const res = await window.forkcode?.connectProject(rootPath)
+      setConnected(!!res?.ok)
+    } catch {
+      setConnected(false)
+    }
   }
 
   return (

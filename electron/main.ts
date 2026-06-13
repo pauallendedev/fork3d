@@ -81,10 +81,15 @@ ipcMain.handle('fs:readTree', async (_e, root: string) => {
 })
 
 ipcMain.handle('project:connect', async (_e, root: string) => {
-  const file = projectSettingsPath(root)
-  const next = installHooks(readSettings(file), PORT)
-  writeSettings(file, next)
-  return { ok: true, port: PORT }
+  try {
+    const file = projectSettingsPath(root)
+    const next = installHooks(readSettings(file), PORT)
+    writeSettings(file, next)
+    return { ok: true, port: PORT }
+  } catch (err) {
+    console.error('[forkcode] connect failed:', err)
+    return { ok: false, port: PORT }
+  }
 })
 
 ipcMain.handle('project:isConnected', async (_e, root: string) => {
