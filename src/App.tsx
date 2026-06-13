@@ -14,11 +14,17 @@ import './App.css'
 
 export default function App() {
   useSimulation()
-  const [rootPath] = useState<string | null>(null)
+  const [rootPath, setRootPath] = useState<string | null>(null)
   const tree = useProjectTree(rootPath)
+
+  async function openFolder() {
+    const dir = await window.forkcode?.openFolder()
+    if (dir) setRootPath(dir)
+  }
+
   return (
     <div className="app-root">
-      <TitleBar />
+      <TitleBar onOpenFolder={window.forkcode ? openFolder : undefined} />
       <div className="app-main">
         <aside className="app-card app-activity">
           <ActivityBar />
