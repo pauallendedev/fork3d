@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { AgentColor, BottomTab, LiveAgent, LogEntry, LogLevel, TodoItem } from './types'
+import type { ActiveView, AgentColor, BottomTab, LiveAgent, LogEntry, LogLevel, TodoItem } from './types'
 import { applyEvent as reduce, emptyAgentsSlice, reapEnded } from './reducer'
 import type { AgentEvent } from '../telemetry/types'
 
@@ -38,6 +38,7 @@ interface ForkcodeStore {
   problems: number
   connected: boolean
   demo: boolean
+  activeView: ActiveView
   // actions
   applyEvent: (ev: AgentEvent) => void
   reap: () => void
@@ -48,6 +49,7 @@ interface ForkcodeStore {
   setPalette: (open: boolean) => void
   setPaletteQuery: (q: string) => void
   setBottomTab: (t: BottomTab) => void
+  setActiveView: (v: ActiveView) => void
   setZoom: (z: number) => void
   pushLog: (agent: AgentColor, level: LogLevel, message: string) => void
   runGateAction: (id: string) => void
@@ -67,6 +69,7 @@ export const useStore = create<ForkcodeStore>((set, get) => ({
   problems: 2,
   connected: false,
   demo: false,
+  activeView: 'explorer',
 
   applyEvent: (ev) =>
     set((s) => {
@@ -103,6 +106,7 @@ export const useStore = create<ForkcodeStore>((set, get) => ({
   setPalette: (open) => set((s) => ({ paletteOpen: open, paletteQuery: open ? s.paletteQuery : '' })),
   setPaletteQuery: (q) => set({ paletteQuery: q }),
   setBottomTab: (t) => set({ bottomTab: t }),
+  setActiveView: (v) => set({ activeView: v }),
   setZoom: (z) => set({ zoom: Math.min(140, Math.max(60, Math.round(z))) }),
   pushLog: (agent, level, message) => set((s) => ({ logs: [...s.logs.slice(-200), makeLog(agent, level, message)] })),
 

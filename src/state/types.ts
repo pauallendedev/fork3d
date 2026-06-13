@@ -61,3 +61,5 @@ export interface LiveAgent {
   startedAt: number
   endedAt?: number
 }
+
+export type ActiveView = 'explorer' | 'search' | 'scm' | 'spatial' | 'extensions'
