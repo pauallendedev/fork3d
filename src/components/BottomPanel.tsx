@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { AGENT_CSS, AGENT_ORDER, useStore } from '../state/store'
+import { AGENT_CSS, useStore } from '../state/store'
 import type { AgentStatus, BottomTab, LogLevel } from '../state/types'
 import './BottomPanel.css'
 
@@ -80,12 +80,13 @@ export function BottomPanel() {
   const bottomTab = useStore((s) => s.bottomTab)
   const setBottomTab = useStore((s) => s.setBottomTab)
   const problems = useStore((s) => s.problems)
-  const selected = useStore((s) => s.selected)
   const agents = useStore((s) => s.agents)
+  const order = useStore((s) => s.order)
+  const selected = useStore((s) => s.selected)
   const selectAgent = useStore((s) => s.selectAgent)
   const [menuOpen, setMenuOpen] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
-  const agent = agents[selected]
+  const agent = selected ? agents[selected] : undefined
 
   useEffect(() => {
     const el = scrollRef.current
@@ -108,27 +109,31 @@ export function BottomPanel() {
         <div className="bp-tools">
           <div className="bp-agentsel">
             <button className="bp-agentbtn" onClick={() => setMenuOpen((o) => !o)}>
-              <span className="bp-agentdot" style={{ background: AGENT_CSS[selected] }} />
-              {agent.name}
+              <span className="bp-agentdot" style={{ background: agent ? AGENT_CSS[agent.color] : 'var(--text-3)' }} />
+              {agent ? agent.role : 'No agents'}
               <span className="bp-chev">
                 <GhostIcon name="chevron-down" />
               </span>
             </button>
-            {menuOpen && (
+            {menuOpen && order.length > 0 && (
               <div className="bp-agentmenu">
-                {AGENT_ORDER.map((id) => (
-                  <button
-                    key={id}
-                    className="bp-agentitem"
-                    onClick={() => {
-                      selectAgent(id)
-                      setMenuOpen(false)
-                    }}
-                  >
-                    <span className="bp-agentdot" style={{ background: AGENT_CSS[id] }} />
-                    {agents[id].name}
-                  </button>
-                ))}
+                {order.map((id) => {
+                  const a = agents[id]
+                  if (!a) return null
+                  return (
+                    <button
+                      key={id}
+                      className="bp-agentitem"
+                      onClick={() => {
+                        selectAgent(id)
+                        setMenuOpen(false)
+                      }}
+                    >
+                      <span className="bp-agentdot" style={{ background: AGENT_CSS[a.color] }} />
+                      {a.role}
+                    </button>
+                  )
+                })}
               </div>
             )}
           </div>
@@ -190,27 +195,28 @@ export function BottomPanel() {
           )}
         </div>
         <div className="bp-task">
-          <div className="bp-row">
-            <span className="bp-label">Task</span>
-            <span className="bp-value">{agent.task ?? '—'}</span>
-          </div>
-          <div className="bp-row">
-            <span className="bp-label">Branch</span>
-            <span className="bp-value bp-mono">{agent.branch ?? '—'}</span>
-          </div>
-          <div className="bp-row">
-            <span className="bp-label">Status</span>
-            <span className={`bp-pill ${STATUS_PILL[agent.status].cls}`}>{STATUS_PILL[agent.status].label}</span>
-          </div>
-          <div className="bp-row">
-            <span className="bp-label">Progress</span>
-            <span className="bp-progress">
-              <span className="bp-track">
-                <span className="bp-fill" style={{ width: `${agent.progress}%` }} />
-              </span>
-              <span className="bp-pct">{agent.progress}%</span>
-            </span>
-          </div>
+          {agent ? (
+            <>
+              <div className="bp-row">
+                <span className="bp-label">Task</span>
+                <span className="bp-value">{agent.task ?? '—'}</span>
+              </div>
+              <div className="bp-row">
+                <span className="bp-label">Role</span>
+                <span className="bp-value">{agent.role}</span>
+              </div>
+              <div className="bp-row">
+                <span className="bp-label">Status</span>
+                <span className={`bp-pill ${STATUS_PILL[agent.status].cls}`}>{STATUS_PILL[agent.status].label}</span>
+              </div>
+              <div className="bp-row">
+                <span className="bp-label">Activity</span>
+                <span className="bp-value">{agent.activity ?? '—'}</span>
+              </div>
+            </>
+          ) : (
+            <div className="bp-row"><span className="bp-value">Office empty — no agents running.</span></div>
+          )}
         </div>
       </div>
     </div>

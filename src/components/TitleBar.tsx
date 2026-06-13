@@ -62,6 +62,8 @@ function GridIcon() {
 
 interface TitleBarProps {
   onOpenFolder?: () => void
+  demo?: boolean
+  onToggleDemo?: () => void
 }
 
 function FolderIcon() {
@@ -72,7 +74,7 @@ function FolderIcon() {
   )
 }
 
-export function TitleBar({ onOpenFolder }: TitleBarProps) {
+export function TitleBar({ onOpenFolder, demo, onToggleDemo }: TitleBarProps) {
   return (
     <header className="tb-root">
       <div className="tb-lights" aria-hidden="true">
@@ -94,6 +96,13 @@ export function TitleBar({ onOpenFolder }: TitleBarProps) {
         {onOpenFolder && (
           <button className="tb-btn" type="button" aria-label="Open folder" onClick={onOpenFolder}>
             <FolderIcon />
+          </button>
+        )}
+        {onToggleDemo && (
+          <button type="button" className="tb-iconbtn" aria-pressed={demo} aria-label="Toggle demo office" onClick={onToggleDemo}>
+            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={demo ? 'var(--accent)' : 'currentColor'} strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+              <circle cx={12} cy={12} r={9} /><path d="M10 9l5 3-5 3z" />
+            </svg>
           </button>
         )}
         <button className="tb-btn" type="button" aria-label="Toggle panels">

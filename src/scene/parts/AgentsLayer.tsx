@@ -1,34 +1,49 @@
-import { AGENT_ORDER, useStore } from '../../state/store'
+import { useStore } from '../../state/store'
+import type { AgentLocation, LiveAgent } from '../../state/types'
 import { at } from '../iso'
-import { AGENT_POS } from '../layout'
+import { positionInZone } from '../layout'
 import { AgentBot } from './AgentBot'
 import './AgentsLayer.css'
 
-/** Painter order: bots sorted by screen y ascending (back → front). */
-const SORTED = [...AGENT_ORDER].sort((a, b) => AGENT_POS[a].y - AGENT_POS[b].y)
-
 export function AgentsLayer() {
   const agents = useStore((s) => s.agents)
+  const order = useStore((s) => s.order)
   const selected = useStore((s) => s.selected)
   const selectAgent = useStore((s) => s.selectAgent)
 
+  // group by station to compute per-station cluster index
+  const byStation: Record<string, LiveAgent[]> = {}
+  for (const id of order) {
+    const a = agents[id]
+    if (!a) continue
+    ;(byStation[a.station] ??= []).push(a)
+  }
+
+  const placed = order
+    .map((id) => agents[id])
+    .filter(Boolean)
+    .map((a) => {
+      const group = byStation[a.station]
+      const idx = group.indexOf(a)
+      const pos = positionInZone(a.station as AgentLocation, idx, group.length)
+      return { a, pos }
+    })
+    .sort((p, q) => p.pos.y - q.pos.y)
+
   return (
     <g className="ag-layer">
-      {SORTED.map((id) => {
-        const agent = agents[id]
-        return (
-          <g key={id} transform={at(AGENT_POS[id])}>
-            <AgentBot
-              color={id}
-              pose={agent.pose}
-              status={agent.status}
-              selected={selected === id}
-              index={AGENT_ORDER.indexOf(id)}
-              onClick={() => selectAgent(id)}
-            />
-          </g>
-        )
-      })}
+      {placed.map(({ a, pos }, i) => (
+        <g key={a.id} className={a.endedAt ? 'ag-spawn ag-leaving' : 'ag-spawn'} transform={at(pos)}>
+          <AgentBot
+            color={a.color}
+            pose={a.pose}
+            status={a.status}
+            selected={selected === a.id}
+            index={i}
+            onClick={() => selectAgent(a.id)}
+          />
+        </g>
+      ))}
     </g>
   )
 }

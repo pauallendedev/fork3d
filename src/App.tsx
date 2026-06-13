@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useSimulation } from './state/store'
+import { useStore } from './state/store'
+import { useForkcodeEvents } from './hooks/useForkcodeEvents'
 import { useProjectTree } from './hooks/useProjectTree'
 import { TitleBar } from './components/TitleBar'
 import { CommandPalette } from './components/CommandPalette'
@@ -13,7 +14,9 @@ import { OfficeScene } from './scene/OfficeScene'
 import './App.css'
 
 export default function App() {
-  useSimulation()
+  useForkcodeEvents()
+  const demo = useStore((s) => s.demo)
+  const setDemo = useStore((s) => s.setDemo)
   const [rootPath, setRootPath] = useState<string | null>(null)
   const tree = useProjectTree(rootPath)
 
@@ -24,7 +27,7 @@ export default function App() {
 
   return (
     <div className="app-root">
-      <TitleBar onOpenFolder={window.forkcode ? openFolder : undefined} />
+      <TitleBar onOpenFolder={window.forkcode ? openFolder : undefined} demo={demo} onToggleDemo={() => setDemo(!demo)} />
       <div className="app-main">
         <aside className="app-card app-activity">
           <ActivityBar />

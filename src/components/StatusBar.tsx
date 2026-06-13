@@ -62,6 +62,7 @@ function BellIcon() {
 
 export function StatusBar() {
   const setBottomTab = useStore((s) => s.setBottomTab)
+  const connected = useStore((s) => s.connected)
 
   return (
     <footer className="sb-root">
@@ -93,8 +94,8 @@ export function StatusBar() {
         <button type="button" className="sb-pill">LF</button>
         <button type="button" className="sb-pill">YAML</button>
         <button type="button" className="sb-pill">
-          <span className="sb-dot" aria-hidden="true" />
-          <span>SAMS: Connected</span>
+          <span className="sb-dot" aria-hidden="true" style={{ background: connected ? 'var(--green)' : 'var(--text-3)' }} />
+          <span>{connected ? 'SAMS: Connected' : 'SAMS: Disconnected'}</span>
         </button>
         <button type="button" className="sb-pill" aria-label="Notifications">
           <BellIcon />

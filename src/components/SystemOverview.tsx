@@ -1,8 +1,8 @@
 import type { CSSProperties } from 'react'
-import { AGENT_CSS, AGENT_ORDER, useStore } from '../state/store'
+import { AGENT_CSS, useStore } from '../state/store'
 import { iso } from '../scene/iso'
 import type { Pt } from '../scene/iso'
-import { AGENT_POS, WALL_H } from '../scene/layout'
+import { STATION_ZONES, WALL_H } from '../scene/layout'
 import './SystemOverview.css'
 
 const S = 0.27
@@ -18,6 +18,8 @@ export function SystemOverview() {
   const zoom = useStore((s) => s.zoom)
   const setZoom = useStore((s) => s.setZoom)
   const selectAgent = useStore((s) => s.selectAgent)
+  const agents = useStore((s) => s.agents)
+  const order = useStore((s) => s.order)
   return (
     <div className="so-root">
       <div className="so-header">
@@ -48,8 +50,10 @@ export function SystemOverview() {
             fill="var(--iso-floor)"
             stroke="var(--iso-floor-edge)"
           />
-          {AGENT_ORDER.map((id, i) => {
-            const p = m(AGENT_POS[id])
+          {order.map((id, i) => {
+            const a = agents[id]
+            if (!a) return null
+            const p = m(STATION_ZONES[a.station])
             return (
               <g
                 key={id}
@@ -58,7 +62,7 @@ export function SystemOverview() {
                 onClick={() => selectAgent(id)}
               >
                 <line x1={p.x} y1={p.y} x2={p.x} y2={p.y - 14} stroke="var(--text-3)" strokeWidth={1} />
-                <circle className="so-ball" cx={p.x} cy={p.y - 19} r={5.5} fill={AGENT_CSS[id]} stroke="#ffffff" strokeWidth={1.5} />
+                <circle className="so-ball" cx={p.x} cy={p.y - 19} r={5.5} fill={AGENT_CSS[a.color]} stroke="#ffffff" strokeWidth={1.5} />
               </g>
             )
           })}
@@ -67,7 +71,7 @@ export function SystemOverview() {
       <div className="so-footer">
         <span className="so-active">
           <span className="so-dot" />
-          {AGENT_ORDER.length} Agents Active
+          {order.length} {order.length === 1 ? 'Agent' : 'Agents'} Active
         </span>
         <div className="so-zoom">
           <button onClick={() => setZoom(zoom - 10)} aria-label="Zoom out">

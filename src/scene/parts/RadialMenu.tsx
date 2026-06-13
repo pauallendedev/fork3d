@@ -1,6 +1,6 @@
 import { useStore } from '../../state/store'
 import { RADIAL_SEGMENTS } from '../../data/radial'
-import { AGENT_POS, RADIAL_OFFSET } from '../layout'
+import { RADIAL_OFFSET, STATION_ZONES } from '../layout'
 import './RadialMenu.css'
 
 const R_OUT = 86
@@ -108,10 +108,13 @@ function Icon({ name }: { name: string }) {
 
 export function RadialMenu() {
   const radialFor = useStore((s) => s.radialFor)
+  const agents = useStore((s) => s.agents)
   const runRadialAction = useStore((s) => s.runRadialAction)
   const setRadial = useStore((s) => s.setRadial)
   if (!radialFor) return null
-  const p = AGENT_POS[radialFor]
+  const agent = agents[radialFor]
+  if (!agent) return null
+  const p = STATION_ZONES[agent.station]
   return (
     <g className="rm-root" transform={`translate(${p.x + RADIAL_OFFSET.dx} ${p.y + RADIAL_OFFSET.dy})`}>
       <defs>

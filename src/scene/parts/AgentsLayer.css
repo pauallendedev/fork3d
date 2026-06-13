@@ -115,3 +115,18 @@
     transform: scale(1);
   }
 }
+
+.ag-spawn {
+  transform-box: fill-box;
+  animation: ag-pop 220ms ease-out both;
+}
+@keyframes ag-pop {
+  from { opacity: 0; transform: translateY(6px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.ag-leaving {
+  animation: ag-fade 1400ms ease-in forwards;
+}
+@keyframes ag-fade {
+  to { opacity: 0; }
+}
