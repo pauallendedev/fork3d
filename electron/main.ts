@@ -5,12 +5,20 @@ import { startServer } from './server'
 import { normalize } from '../src/telemetry/normalize'
 import { installHooks, hooksInstalled } from './hooks-config'
 import { projectSettingsPath, readSettings, writeSettings } from './settings-io'
+import { startTailer } from './transcript-tailer'
 
 const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
 const PORT = 4517
 
 let mainWindow: BrowserWindow | null = null
 let projectRoot = ''
+let stopTailer: (() => void) | null = null
+
+function openProject(root: string) {
+  projectRoot = root
+  stopTailer?.()
+  stopTailer = startTailer({ projectRoot: root, emit: (ev) => mainWindow?.webContents.send('app:event', ev) })
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -51,13 +59,13 @@ startServer({
 ipcMain.handle('dialog:openFolder', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory'] })
   if (canceled) return ''
-  projectRoot = filePaths[0]
+  openProject(filePaths[0])
   return projectRoot
 })
 
 ipcMain.handle('fs:readTree', async (_e, root: string) => {
   if (!root) return []
-  projectRoot = root
+  openProject(root)
   return readTree(root)
 })
 
