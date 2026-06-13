@@ -33,15 +33,19 @@ export function useForkcodeEvents() {
   useEffect(() => {
     if (!demo) return
     let i = 0
+    const timeouts: ReturnType<typeof setTimeout>[] = []
     const spawn = () => {
       const id = `demo-${i}`
       applyEvent({ kind: 'agent:start', agentId: id, role: DEMO_ROLES[i % DEMO_ROLES.length], instructions: 'Demo task', cwd: '', sessionId: 'demo', ts: Date.now() })
       const myId = id
-      setTimeout(() => applyEvent({ kind: 'agent:stop', agentId: myId, cwd: '', ts: Date.now() }), 6000)
+      timeouts.push(setTimeout(() => applyEvent({ kind: 'agent:stop', agentId: myId, cwd: '', ts: Date.now() }), 6000))
       i++
     }
     spawn()
     const t = setInterval(spawn, 2500)
-    return () => clearInterval(t)
+    return () => {
+      clearInterval(t)
+      timeouts.forEach(clearTimeout)
+    }
   }, [demo, applyEvent])
 }

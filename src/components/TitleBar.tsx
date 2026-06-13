@@ -99,7 +99,7 @@ export function TitleBar({ onOpenFolder, demo, onToggleDemo }: TitleBarProps) {
           </button>
         )}
         {onToggleDemo && (
-          <button type="button" className="tb-iconbtn" aria-pressed={demo} aria-label="Toggle demo office" onClick={onToggleDemo}>
+          <button type="button" className="tb-btn" aria-pressed={demo} aria-label="Toggle demo office" onClick={onToggleDemo}>
             <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={demo ? 'var(--accent)' : 'currentColor'} strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
               <circle cx={12} cy={12} r={9} /><path d="M10 9l5 3-5 3z" />
             </svg>
