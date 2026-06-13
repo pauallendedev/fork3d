@@ -19,6 +19,16 @@
     "react-dom": "^19.2.6",
     "zustand": "^5.0.14"
   },
+  "build": {
+    "appId": "com.forkcode.app",
+    "productName": "ForkCode",
+    "directories": { "output": "release/${version}" },
+    "files": ["dist/**/*", "dist-electron/**/*"],
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.developer-tools"
+    }
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.12.3",
