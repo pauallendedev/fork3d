@@ -1,5 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import path from 'node:path'
+import { readTree } from './fs-tree'
 
 const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
 
@@ -30,6 +31,11 @@ function createWindow() {
 ipcMain.handle('dialog:openFolder', async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory'] })
   return canceled ? '' : filePaths[0]
+})
+
+ipcMain.handle('fs:readTree', async (_e, root: string) => {
+  if (!root) return []
+  return readTree(root)
 })
 
 app.whenReady().then(createWindow)
