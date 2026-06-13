@@ -1,5 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import path from 'node:path'
+import { realpathSync } from 'node:fs'
 import { readTree } from './fs-tree'
 import { startServer } from './server'
 import { normalize } from '../src/telemetry/normalize'
@@ -14,10 +15,20 @@ let mainWindow: BrowserWindow | null = null
 let projectRoot = ''
 let stopTailer: (() => void) | null = null
 
+/** Canonical path: resolve symlinks (macOS /tmp -> /private/tmp) and drop trailing slashes. */
+function canonical(p: string): string {
+  if (!p) return ''
+  try {
+    return realpathSync(p).replace(/\/+$/, '')
+  } catch {
+    return p.replace(/\/+$/, '')
+  }
+}
+
 function openProject(root: string) {
-  projectRoot = root
+  projectRoot = canonical(root)
   stopTailer?.()
-  stopTailer = startTailer({ projectRoot: root, emit: (ev) => mainWindow?.webContents.send('app:event', ev) })
+  stopTailer = startTailer({ projectRoot, emit: (ev) => mainWindow?.webContents.send('app:event', ev) })
 }
 
 function createWindow() {
@@ -49,8 +60,8 @@ startServer({
   port: PORT,
   onBody: (endpoint, body) => {
     const raw = (body ?? {}) as Record<string, unknown>
-    // only forward events for the currently-open project
-    if (projectRoot && typeof raw.cwd === 'string' && raw.cwd !== projectRoot) return
+    // only forward events for the currently-open project (symlink/trailing-slash safe)
+    if (projectRoot && canonical(String(raw.cwd ?? '')) !== projectRoot) return
     const ev = normalize(endpoint, raw, Date.now())
     if (ev) mainWindow?.webContents.send('app:event', ev)
   },

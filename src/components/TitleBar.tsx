@@ -62,6 +62,9 @@ function GridIcon() {
 
 interface TitleBarProps {
   onOpenFolder?: () => void
+  connected?: boolean
+  canConnect?: boolean
+  onConnect?: () => void
   demo?: boolean
   onToggleDemo?: () => void
 }
@@ -74,7 +77,17 @@ function FolderIcon() {
   )
 }
 
-export function TitleBar({ onOpenFolder, demo, onToggleDemo }: TitleBarProps) {
+function PlugIcon({ connected }: { connected?: boolean }) {
+  return (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={connected ? 'var(--accent)' : 'currentColor'} strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
+      <rect x="6" y="7" width="12" height="6" rx="2" />
+      <path d="M12 13v4a3 3 0 0 0 3 3h1" />
+    </svg>
+  )
+}
+
+export function TitleBar({ onOpenFolder, connected, canConnect, onConnect, demo, onToggleDemo }: TitleBarProps) {
   return (
     <header className="tb-root">
       <div className="tb-lights" aria-hidden="true">
@@ -96,6 +109,17 @@ export function TitleBar({ onOpenFolder, demo, onToggleDemo }: TitleBarProps) {
         {onOpenFolder && (
           <button className="tb-btn" type="button" aria-label="Open folder" onClick={onOpenFolder}>
             <FolderIcon />
+          </button>
+        )}
+        {onConnect && (
+          <button
+            className="tb-btn"
+            type="button"
+            disabled={!canConnect}
+            aria-label={connected ? 'Project connected' : 'Connect project (install hooks)'}
+            onClick={onConnect}
+          >
+            <PlugIcon connected={connected} />
           </button>
         )}
         {onToggleDemo && (

@@ -17,17 +17,36 @@ export default function App() {
   useForkcodeEvents()
   const demo = useStore((s) => s.demo)
   const setDemo = useStore((s) => s.setDemo)
+  const connected = useStore((s) => s.connected)
+  const setConnected = useStore((s) => s.setConnected)
   const [rootPath, setRootPath] = useState<string | null>(null)
   const tree = useProjectTree(rootPath)
 
   async function openFolder() {
     const dir = await window.forkcode?.openFolder()
-    if (dir) setRootPath(dir)
+    if (dir) {
+      setRootPath(dir)
+      const ok = await window.forkcode?.isConnected(dir)
+      setConnected(!!ok)
+    }
+  }
+
+  async function connectProject() {
+    if (!rootPath) return
+    await window.forkcode?.connectProject(rootPath)
+    setConnected(true)
   }
 
   return (
     <div className="app-root">
-      <TitleBar onOpenFolder={window.forkcode ? openFolder : undefined} demo={demo} onToggleDemo={() => setDemo(!demo)} />
+      <TitleBar
+        onOpenFolder={window.forkcode ? openFolder : undefined}
+        connected={connected}
+        canConnect={!!rootPath}
+        onConnect={window.forkcode ? connectProject : undefined}
+        demo={demo}
+        onToggleDemo={() => setDemo(!demo)}
+      />
       <div className="app-main">
         <aside className="app-card app-activity">
           <ActivityBar />

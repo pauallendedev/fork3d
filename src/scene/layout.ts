@@ -1,6 +1,6 @@
 import { iso } from './iso'
 import type { Pt } from './iso'
-import type { AgentColor, AgentLocation } from '../state/types'
+import type { AgentLocation } from '../state/types'
 
 /** Wall height in screen pixels. */
 export const WALL_H = 200
@@ -18,18 +18,6 @@ export const ANCHORS = {
   plantB: iso(0.05, 0.05),
   plantC: iso(0.95, 0.06),
 } satisfies Record<string, Pt>
-
-/** Where each agent stands/sits on the floor. */
-export const AGENT_POS: Record<AgentColor, Pt> = {
-  // blue sits at the near-left end of the desk: torso visible over the desktop
-  blue: { x: 440, y: 432 },
-  green: iso(0.84, 0.24),
-  orange: iso(0.3, 0.78),
-  purple: iso(0.86, 0.7),
-  // red sits on the couch cushions
-  red: { x: 352, y: 430 },
-  yellow: iso(0.6, 0.84),
-}
 
 /** Offset of the radial menu center relative to the selected agent. */
 export const RADIAL_OFFSET = { dx: 279, dy: -75 }

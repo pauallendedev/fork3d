@@ -32,6 +32,3 @@ export interface TodosEvent {
 }
 
 export type AgentEvent = AgentStartEvent | AgentStopEvent | AgentActivityEvent | TodosEvent
-
-/** Loosely-typed JSON body as received from a hook POST. */
-export type RawHookBody = Record<string, unknown>

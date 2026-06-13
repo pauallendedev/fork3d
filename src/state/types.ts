@@ -6,17 +6,6 @@ export type AgentPose = 'stand' | 'sit' | 'walk' | 'point'
 
 export type AgentLocation = 'desk' | 'lounge' | 'whiteboard' | 'kanban' | 'gate' | 'floor'
 
-export interface Agent {
-  id: AgentColor
-  name: string
-  status: AgentStatus
-  pose: AgentPose
-  location: AgentLocation
-  task: string | null
-  branch: string | null
-  progress: number
-}
-
 export type LogLevel = 'INFO' | 'SUCCESS' | 'WARN' | 'ERROR' | 'IDLE'
 
 export interface LogEntry {

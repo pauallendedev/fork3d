@@ -8,20 +8,17 @@ const DEMO_ROLES = ['Ingeniero', 'Desarrollador', 'Tester', 'Analista', 'Desarro
 export function useForkcodeEvents() {
   const applyEvent = useStore((s) => s.applyEvent)
   const reap = useStore((s) => s.reap)
-  const setConnected = useStore((s) => s.setConnected)
   const demo = useStore((s) => s.demo)
 
   // real events
   useEffect(() => {
     const fc = window.forkcode
     if (!fc?.onEvent) return
-    setConnected(true)
     const unsub = fc.onEvent((ev) => applyEvent(ev as AgentEvent))
     return () => {
       unsub?.()
-      setConnected(false)
     }
-  }, [applyEvent, setConnected])
+  }, [applyEvent])
 
   // reap stopped agents on a timer
   useEffect(() => {
