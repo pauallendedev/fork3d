@@ -3,6 +3,7 @@ import { createServer, type Server } from 'node:http'
 export interface ServerOptions {
   port: number
   onBody: (endpoint: string, body: unknown) => void
+  onError?: (err: Error) => void
 }
 
 export function startServer(opts: ServerOptions): Server {
@@ -33,6 +34,13 @@ export function startServer(opts: ServerOptions): Server {
       }
       res.writeHead(204).end()
     })
+  })
+  server.on('error', (err) => {
+    if (opts.onError) {
+      opts.onError(err)
+    } else {
+      console.error('[forkcode] telemetry server error:', err)
+    }
   })
   server.listen(opts.port, '127.0.0.1')
   return server

@@ -42,3 +42,21 @@ test('onBody throwing is isolated and still responds 204', async () => {
   const res = await fetch(`http://127.0.0.1:${port}/agent/start`, { method: 'POST', body: JSON.stringify({ agent_id: 'a1' }) })
   expect(res.status).toBe(204)
 })
+
+test('listen error (port in use) is reported, not thrown', async () => {
+  // grab a fixed port via a first server
+  const first = startServer({ port: 0, onBody: () => {} })
+  await new Promise((r) => first.on('listening', r))
+  const port = addrPort(first)
+
+  const errors: Error[] = []
+  const second = startServer({ port, onBody: () => {}, onError: (e) => errors.push(e) })
+  // wait a tick for the async 'error' to fire
+  await new Promise((r) => setTimeout(r, 100))
+
+  expect(errors.length).toBe(1)
+  expect((errors[0] as NodeJS.ErrnoException).code).toBe('EADDRINUSE')
+
+  first.close()
+  second.close()
+})
