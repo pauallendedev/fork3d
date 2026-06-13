@@ -1,0 +1,55 @@
+export type AgentColor = 'blue' | 'green' | 'orange' | 'purple' | 'red' | 'yellow'
+
+export type AgentStatus = 'working' | 'success' | 'warning' | 'idle'
+
+export type AgentPose = 'stand' | 'sit' | 'walk' | 'point'
+
+export type AgentLocation = 'desk' | 'lounge' | 'whiteboard' | 'kanban' | 'gate' | 'floor'
+
+export interface Agent {
+  id: AgentColor
+  name: string
+  status: AgentStatus
+  pose: AgentPose
+  location: AgentLocation
+  task: string | null
+  branch: string | null
+  progress: number
+}
+
+export type LogLevel = 'INFO' | 'SUCCESS' | 'WARN' | 'ERROR' | 'IDLE'
+
+export interface LogEntry {
+  id: number
+  time: string
+  agent: AgentColor
+  level: LogLevel
+  message: string
+}
+
+export type BottomTab = 'terminal' | 'output' | 'eventlog' | 'problems'
+
+export interface FileNode {
+  name: string
+  path?: string
+  type: 'folder' | 'file'
+  icon?: 'agent' | 'flow' | 'env' | 'spatial' | 'yaml' | 'md' | 'license'
+  color?: AgentColor
+  badge?: 'M' | 'U' | 'check' | 'dot'
+  children?: FileNode[]
+}
+
+export interface CommandItem {
+  id: string
+  title: string
+  subtitle: string
+  kbd?: string
+  icon: string
+}
+
+export interface GateAction {
+  id: string
+  title: string
+  subtitle: string
+  icon: string
+}
