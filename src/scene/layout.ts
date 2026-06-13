@@ -1,6 +1,6 @@
 import { iso } from './iso'
 import type { Pt } from './iso'
-import type { AgentColor } from '../state/types'
+import type { AgentColor, AgentLocation } from '../state/types'
 
 /** Wall height in screen pixels. */
 export const WALL_H = 200
@@ -54,3 +54,22 @@ export const BADGES: BadgeDef[] = [
   { id: 'desk', title: 'Desk 01', subtitle: 'Active Compute', variant: 'dark', p: { x: 510, y: 555 } },
   { id: 'gate', title: 'Security Gate', subtitle: 'Access Granted', variant: 'light', dot: 'var(--green)', p: { x: 858, y: 486 } },
 ]
+
+/** Center floor-contact point of each office station (1160×760 viewBox). */
+export const STATION_ZONES: Record<AgentLocation, Pt> = {
+  desk: { x: 440, y: 432 },
+  whiteboard: iso(0.84, 0.24),
+  gate: iso(0.6, 0.84),
+  lounge: { x: 352, y: 430 },
+  kanban: iso(0.86, 0.7),
+  floor: iso(0.5, 0.5),
+}
+
+/** Place agent `index` of `count` in a station: a centered horizontal cluster. */
+export function positionInZone(station: AgentLocation, index: number, count: number): Pt {
+  const c = STATION_ZONES[station]
+  if (count <= 1) return c
+  const GAP = 46
+  const offset = (index - (count - 1) / 2) * GAP
+  return { x: c.x + offset, y: c.y + (index % 2 === 1 ? 10 : 0) }
+}
