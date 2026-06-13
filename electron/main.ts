@@ -97,8 +97,11 @@ ipcMain.handle('project:isConnected', async (_e, root: string) => {
 })
 
 app.whenReady().then(createWindow)
+// Quit on window close (all platforms): ForkCode is a single-window tool whose
+// main process holds the telemetry server on :4517 — keeping it alive after the
+// window closes would block the next launch with EADDRINUSE.
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
+  app.quit()
 })
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()

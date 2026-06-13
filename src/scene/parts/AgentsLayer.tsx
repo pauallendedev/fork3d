@@ -33,15 +33,19 @@ export function AgentsLayer() {
   return (
     <g className="ag-layer">
       {placed.map(({ a, pos }, i) => (
-        <g key={a.id} className={a.endedAt ? 'ag-spawn ag-leaving' : 'ag-spawn'} transform={at(pos)}>
-          <AgentBot
-            color={a.color}
-            pose={a.pose}
-            status={a.status}
-            selected={selected === a.id}
-            index={i}
-            onClick={() => selectAgent(a.id)}
-          />
+        // outer <g>: positioning via the SVG transform attribute (untouched by CSS)
+        <g key={a.id} transform={at(pos)}>
+          {/* inner <g>: spawn/leave CSS animation, composed relative to the position */}
+          <g className={a.endedAt ? 'ag-spawn ag-leaving' : 'ag-spawn'}>
+            <AgentBot
+              color={a.color}
+              pose={a.pose}
+              status={a.status}
+              selected={selected === a.id}
+              index={i}
+              onClick={() => selectAgent(a.id)}
+            />
+          </g>
         </g>
       ))}
     </g>
