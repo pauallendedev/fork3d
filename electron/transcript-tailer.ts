@@ -69,7 +69,12 @@ function latestJsonl(dir: string): string | null {
   }
   let best: { f: string; m: number } | null = null
   for (const f of entries) {
-    const m = statSync(join(dir, f)).mtimeMs
+    let m: number
+    try {
+      m = statSync(join(dir, f)).mtimeMs
+    } catch {
+      continue
+    }
     if (!best || m > best.m) best = { f, m }
   }
   return best ? join(dir, best.f) : null
@@ -82,47 +87,52 @@ export interface TailerOptions {
 
 /** Backfill running agents from the latest transcript, then watch for activity. */
 export function startTailer(opts: TailerOptions): () => void {
-  const dir = transcriptDirFor(opts.projectRoot)
-  const file = latestJsonl(dir)
-  if (!file) return () => {}
-
-  // backfill: synthesize agent:start for still-running agents
   try {
-    const lines = readFileSync(file, 'utf8').split('\n').filter(Boolean)
-    for (const r of runningAgentsFrom(lines)) {
-      opts.emit({ kind: 'agent:start', agentId: r.toolUseId, role: r.role, instructions: r.description, cwd: opts.projectRoot, sessionId: '', ts: Date.now() })
-    }
-  } catch {
-    /* ignore */
-  }
+    const dir = transcriptDirFor(opts.projectRoot)
+    const file = latestJsonl(dir)
+    if (!file) return () => {}
 
-  // watch for appended lines → emit activity for tool_use blocks (best-effort)
-  let size = (() => {
+    // backfill: synthesize agent:start for still-running agents
     try {
-      return statSync(file).size
-    } catch {
-      return 0
-    }
-  })()
-  const watcher = watch(file, () => {
-    try {
-      const stat = statSync(file)
-      if (stat.size <= size) {
-        size = stat.size
-        return
+      const lines = readFileSync(file, 'utf8').split('\n').filter(Boolean)
+      for (const r of runningAgentsFrom(lines)) {
+        opts.emit({ kind: 'agent:start', agentId: r.toolUseId, role: r.role, instructions: r.description, cwd: opts.projectRoot, sessionId: '', ts: Date.now() })
       }
-      const buf = readFileSync(file, 'utf8')
-      const fresh = buf.slice(size).split('\n').filter(Boolean)
-      size = stat.size
-      for (const line of fresh) {
-        const rec = parseTranscriptLine(line)
-        if (rec.kind === 'agent_use') {
-          opts.emit({ kind: 'agent:activity', agentId: rec.toolUseId, tool: 'Agent', summary: rec.description, cwd: opts.projectRoot, ts: Date.now() })
+    } catch {
+      /* ignore backfill errors */
+    }
+
+    // watch for appended lines → emit activity for tool_use blocks (best-effort)
+    let size = (() => {
+      try {
+        return statSync(file).size
+      } catch {
+        return 0
+      }
+    })()
+    const watcher = watch(file, () => {
+      try {
+        const stat = statSync(file)
+        if (stat.size <= size) {
+          size = stat.size
+          return
         }
+        const buf = readFileSync(file) // Buffer — byte-correct offsets
+        const fresh = buf.subarray(size).toString('utf8').split('\n').filter(Boolean)
+        size = stat.size
+        for (const line of fresh) {
+          const rec = parseTranscriptLine(line)
+          if (rec.kind === 'agent_use') {
+            opts.emit({ kind: 'agent:activity', agentId: rec.toolUseId, tool: 'Agent', summary: rec.description, cwd: opts.projectRoot, ts: Date.now() })
+          }
+        }
+      } catch {
+        /* ignore */
       }
-    } catch {
-      /* ignore */
-    }
-  })
-  return () => watcher.close()
+    })
+    return () => watcher.close()
+  } catch (err) {
+    console.error('[forkcode] tailer:', err)
+    return () => {}
+  }
 }
