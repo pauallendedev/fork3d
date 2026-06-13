@@ -61,20 +61,11 @@ function GridIcon() {
 }
 
 interface TitleBarProps {
-  onOpenFolder?: () => void
   connected?: boolean
   canConnect?: boolean
   onConnect?: () => void
   demo?: boolean
   onToggleDemo?: () => void
-}
-
-function FolderIcon() {
-  return (
-    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-    </svg>
-  )
 }
 
 function PlugIcon({ connected }: { connected?: boolean }) {
@@ -87,7 +78,7 @@ function PlugIcon({ connected }: { connected?: boolean }) {
   )
 }
 
-export function TitleBar({ onOpenFolder, connected, canConnect, onConnect, demo, onToggleDemo }: TitleBarProps) {
+export function TitleBar({ connected, canConnect, onConnect, demo, onToggleDemo }: TitleBarProps) {
   return (
     <header className="tb-root">
       <div className="tb-lights" aria-hidden="true">
@@ -106,11 +97,6 @@ export function TitleBar({ onOpenFolder, connected, canConnect, onConnect, demo,
       </div>
 
       <div className="tb-actions">
-        {onOpenFolder && (
-          <button className="tb-btn" type="button" aria-label="Open folder" onClick={onOpenFolder}>
-            <FolderIcon />
-          </button>
-        )}
         {onConnect && (
           <button
             className="tb-btn"

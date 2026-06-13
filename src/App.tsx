@@ -6,7 +6,7 @@ import { TitleBar } from './components/TitleBar'
 import { CommandPalette } from './components/CommandPalette'
 import { ActivityBar } from './components/ActivityBar'
 import { StatusBar } from './components/StatusBar'
-import { Explorer } from './components/Explorer'
+import { Sidebar } from './components/Sidebar'
 import { SystemOverview } from './components/SystemOverview'
 import { SecurityGatePanel } from './components/SecurityGatePanel'
 import { BottomPanel } from './components/BottomPanel'
@@ -44,7 +44,6 @@ export default function App() {
   return (
     <div className="app-root">
       <TitleBar
-        onOpenFolder={window.forkcode ? openFolder : undefined}
         connected={connected}
         canConnect={!!rootPath}
         onConnect={window.forkcode ? connectProject : undefined}
@@ -56,7 +55,7 @@ export default function App() {
           <ActivityBar />
         </aside>
         <aside className="app-card app-explorer">
-          <Explorer rootName={tree.rootName} nodes={tree.nodes} />
+          <Sidebar tree={tree} onOpenFolder={window.forkcode ? openFolder : undefined} />
         </aside>
         <div className="app-center">
           <section className="app-card app-scene-col">
