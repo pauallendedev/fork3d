@@ -63,3 +63,10 @@ export interface LiveAgent {
 }
 
 export type ActiveView = 'explorer' | 'search' | 'scm' | 'spatial' | 'extensions'
+
+export interface FilePayload {
+  content: string
+  lang: string
+  truncated: boolean
+  binary: boolean
+}
