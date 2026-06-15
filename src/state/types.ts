@@ -70,3 +70,10 @@ export interface FilePayload {
   truncated: boolean
   binary: boolean
 }
+
+export interface EditorTab {
+  id: string // 'office' for the pinned office tab; otherwise the file's absolute path
+  kind: 'office' | 'file'
+  title: string
+  path?: string
+}

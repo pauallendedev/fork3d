@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { ActiveView, AgentColor, BottomTab, LiveAgent, LogEntry, LogLevel, TodoItem } from './types'
+import type { ActiveView, AgentColor, BottomTab, EditorTab, LiveAgent, LogEntry, LogLevel, TodoItem } from './types'
 import { applyEvent as reduce, emptyAgentsSlice, reapEnded } from './reducer'
 import type { AgentEvent } from '../telemetry/types'
 
@@ -39,6 +39,8 @@ interface ForkcodeStore {
   connected: boolean
   demo: boolean
   activeView: ActiveView
+  openTabs: EditorTab[]
+  activeTabId: string
   // actions
   applyEvent: (ev: AgentEvent) => void
   reap: () => void
@@ -51,6 +53,9 @@ interface ForkcodeStore {
   setBottomTab: (t: BottomTab) => void
   setActiveView: (v: ActiveView) => void
   setZoom: (z: number) => void
+  openFileTab: (path: string, title: string) => void
+  closeTab: (id: string) => void
+  setActiveTab: (id: string) => void
   pushLog: (agent: AgentColor, level: LogLevel, message: string) => void
   runGateAction: (id: string) => void
   runRadialAction: (id: string) => void
@@ -70,6 +75,8 @@ export const useStore = create<ForkcodeStore>((set, get) => ({
   connected: false,
   demo: false,
   activeView: 'explorer',
+  openTabs: [{ id: 'office', kind: 'office', title: 'Office' }],
+  activeTabId: 'office',
 
   applyEvent: (ev) =>
     set((s) => {
@@ -108,6 +115,22 @@ export const useStore = create<ForkcodeStore>((set, get) => ({
   setBottomTab: (t) => set({ bottomTab: t }),
   setActiveView: (v) => set({ activeView: v }),
   setZoom: (z) => set({ zoom: Math.min(140, Math.max(60, Math.round(z))) }),
+  openFileTab: (path, title) =>
+    set((s) => {
+      const exists = s.openTabs.some((t) => t.id === path)
+      const openTabs = exists ? s.openTabs : [...s.openTabs, { id: path, kind: 'file' as const, title, path }]
+      return { openTabs, activeTabId: path }
+    }),
+  closeTab: (id) =>
+    set((s) => {
+      if (id === 'office') return s
+      const idx = s.openTabs.findIndex((t) => t.id === id)
+      if (idx < 0) return s
+      const openTabs = s.openTabs.filter((t) => t.id !== id)
+      const activeTabId = s.activeTabId === id ? (openTabs[idx - 1] ?? openTabs[0]).id : s.activeTabId
+      return { openTabs, activeTabId }
+    }),
+  setActiveTab: (id) => set({ activeTabId: id }),
   pushLog: (agent, level, message) => set((s) => ({ logs: [...s.logs.slice(-200), makeLog(agent, level, message)] })),
 
   runGateAction: () => {},
