@@ -2,7 +2,7 @@ import { readFileSync, statSync, realpathSync } from 'node:fs'
 import { sep } from 'node:path'
 import type { FilePayload } from '../src/state/types'
 
-const MAX_BYTES = 1_000_000
+const MAX_BYTES = 1_000_000 // 1,000,000 bytes (SI MB); files larger are not previewed
 
 const EXT_TO_LANG: Record<string, string> = {
   ts: 'typescript', tsx: 'tsx', js: 'javascript', jsx: 'jsx', mjs: 'javascript', cjs: 'javascript',
@@ -18,11 +18,11 @@ export function langForFile(name: string): string {
   return EXT_TO_LANG[ext] ?? 'text'
 }
 
-function canonical(p: string): string {
+function canonical(p: string): string | null {
   try {
     return realpathSync(p)
   } catch {
-    return p
+    return null
   }
 }
 
@@ -31,7 +31,7 @@ export function readFileGuarded(absPath: string, root: string): FilePayload {
   const empty: FilePayload = { content: '', lang: langForFile(absPath), truncated: false, binary: false }
   const realRoot = canonical(root)
   const real = canonical(absPath)
-  if (realRoot && real !== realRoot && !real.startsWith(realRoot + sep)) return empty // outside root
+  if (!realRoot || !real || (real !== realRoot && !real.startsWith(realRoot + sep))) return empty
 
   let size: number
   try {

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, expect, test } from 'vitest'
-import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, writeFileSync, rmSync, symlinkSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { langForFile, readFileGuarded } from './file-read'
@@ -44,4 +44,18 @@ test('rejects paths outside the root', () => {
   expect(p.content).toBe('')
   expect(p.binary).toBe(false)
   expect(p.truncated).toBe(false)
+})
+
+test('rejects a symlink inside root that points outside root', () => {
+  const outside = mkdtempSync(join(tmpdir(), 'forkcode-outside-'))
+  writeFileSync(join(outside, 'secret.txt'), 'TOP SECRET')
+  const link = join(root, 'escape')
+  try {
+    symlinkSync(join(outside, 'secret.txt'), link)
+  } catch {
+    return // symlink not permitted in this env; skip
+  }
+  const p = readFileGuarded(link, root)
+  expect(p.content).toBe('')
+  rmSync(outside, { recursive: true, force: true })
 })
