@@ -3,14 +3,13 @@ import { useStore } from './state/store'
 import { useForkcodeEvents } from './hooks/useForkcodeEvents'
 import { useProjectTree } from './hooks/useProjectTree'
 import { TitleBar } from './components/TitleBar'
-import { CommandPalette } from './components/CommandPalette'
+import { EditorArea } from './components/EditorArea'
 import { ActivityBar } from './components/ActivityBar'
 import { StatusBar } from './components/StatusBar'
 import { Sidebar } from './components/Sidebar'
 import { SystemOverview } from './components/SystemOverview'
 import { SecurityGatePanel } from './components/SecurityGatePanel'
 import { BottomPanel } from './components/BottomPanel'
-import { OfficeScene } from './scene/OfficeScene'
 import './App.css'
 
 export default function App() {
@@ -59,8 +58,7 @@ export default function App() {
         </aside>
         <div className="app-center">
           <section className="app-card app-scene-col">
-            <OfficeScene />
-            <CommandPalette />
+            <EditorArea />
           </section>
           <section className="app-card app-bottom">
             <BottomPanel />
