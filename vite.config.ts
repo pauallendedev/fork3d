@@ -5,6 +5,7 @@ import { esmShim } from 'vite-plugin-electron/plugin'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [
     react(),
     electron({

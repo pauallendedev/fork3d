@@ -17,13 +17,19 @@
   "dependencies": {
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "shiki": "^4.2.0",
     "zustand": "^5.0.14"
   },
   "build": {
     "appId": "com.forkcode.app",
     "productName": "ForkCode",
-    "directories": { "output": "release/${version}" },
-    "files": ["dist/**/*", "dist-electron/**/*"],
+    "directories": {
+      "output": "release/${version}"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*"
+    ],
     "mac": {
       "target": "dmg",
       "category": "public.app-category.developer-tools"
