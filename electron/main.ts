@@ -2,6 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import path from 'node:path'
 import { realpathSync } from 'node:fs'
 import { readTree } from './fs-tree'
+import { readFileGuarded } from './file-read'
 import { startServer } from './server'
 import { normalize } from '../src/telemetry/normalize'
 import { installHooks, hooksInstalled } from './hooks-config'
@@ -78,6 +79,11 @@ ipcMain.handle('fs:readTree', async (_e, root: string) => {
   if (!root) return []
   openProject(root)
   return readTree(root)
+})
+
+ipcMain.handle('fs:readFile', async (_e, p: string) => {
+  if (!p || !projectRoot) return { content: '', lang: 'text', truncated: false, binary: false }
+  return readFileGuarded(p, projectRoot)
 })
 
 ipcMain.handle('project:connect', async (_e, root: string) => {

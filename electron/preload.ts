@@ -4,6 +4,8 @@ import type { FileNode } from './fs-tree'
 const api = {
   openFolder: (): Promise<string> => ipcRenderer.invoke('dialog:openFolder'),
   readTree: (root: string): Promise<FileNode[]> => ipcRenderer.invoke('fs:readTree', root),
+  readFile: (path: string): Promise<import('../src/state/types').FilePayload> =>
+    ipcRenderer.invoke('fs:readFile', path),
   connectProject: (root: string): Promise<{ ok: boolean; port: number }> =>
     ipcRenderer.invoke('project:connect', root),
   isConnected: (root: string): Promise<boolean> => ipcRenderer.invoke('project:isConnected', root),
