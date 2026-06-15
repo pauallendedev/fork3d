@@ -170,14 +170,22 @@ function FolderRow({ node, depth }: { node: FileNode; depth: number }) {
 function FileRow({ node, depth }: { node: FileNode; depth: number }) {
   const selected = useStore((s) => s.selected)
   const selectAgent = useStore((s) => s.selectAgent)
+  const openFileTab = useStore((s) => s.openFileTab)
   const agentColor = node.icon === 'agent' ? node.color : undefined
   const isSelected = agentColor !== undefined && agentColor === selected
+  function onClick() {
+    if (node.path) {
+      openFileTab(node.path, node.name)
+    } else if (agentColor) {
+      selectAgent(agentColor)
+    }
+  }
   return (
     <button
       type="button"
       className={isSelected ? 'ex-row ex-row-selected' : 'ex-row'}
       style={{ paddingLeft: pad(depth) }}
-      onClick={agentColor ? () => selectAgent(agentColor) : undefined}
+      onClick={onClick}
     >
       <FileIcon node={node} />
       <span className="ex-name">{node.name}</span>
